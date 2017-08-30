@@ -30,7 +30,7 @@ public class DummyDataProducer {
     public Observable<DummyLargeTable> getObservable(){
         return Observable.create(subscriber->{
             while(!subscriber.isUnsubscribed()){
-                for(long i = 1; i<150;i++){
+                for(long i = 1; i<1500;i++){
                     DummyLargeTable d = getInstance(i);
                     subscriber.onNext(d);
                 }
