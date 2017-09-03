@@ -7,6 +7,7 @@ package com.affinity.samplerestapp.rxjavasol;
 
 import com.affinity.samplerestapp.model.DummyLargeTable;
 import com.affinity.samplerestapp.service.DummyLargeTableFacade;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -27,6 +28,10 @@ public class DummyDataProducer {
         return facade.find(id);
     }
     
+    public List<DummyLargeTable> getListInstance(int[] range){
+        return facade.findRange(range);
+    }
+    
     public Observable<DummyLargeTable> getObservable(){
         return Observable.create(subscriber->{
             while(!subscriber.isUnsubscribed()){
@@ -39,6 +44,21 @@ public class DummyDataProducer {
             subscriber.unsubscribe();
         });
     }
+    
+    public Observable<List<DummyLargeTable>> getListObservable(final int[] range){
+        return Observable.create((subscriber) -> {
+            while(!subscriber.isUnsubscribed()){
+                List<DummyLargeTable> largeTables = getListInstance(range);
+                subscriber.onNext(largeTables);
+            }
+            sleep(1000);
+        });
+    }
+    
+    public List<DummyLargeTable> getChunkedData(final int[] range){
+        return facade.findRange(range);
+    }
+    
 
     private void sleep(int i) {
         try {
