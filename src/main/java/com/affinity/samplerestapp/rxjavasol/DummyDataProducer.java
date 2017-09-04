@@ -7,6 +7,7 @@ package com.affinity.samplerestapp.rxjavasol;
 
 import com.affinity.samplerestapp.model.DummyLargeTable;
 import com.affinity.samplerestapp.service.DummyLargeTableFacade;
+import com.affinity.samplerestapp.utilites.GenericUtilities;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +40,7 @@ public class DummyDataProducer {
                     DummyLargeTable d = getInstance(i);
                     subscriber.onNext(d);
                 }
-                sleep(1000);
+                GenericUtilities.sleep(1000);
             }
             subscriber.unsubscribe();
         });
@@ -51,7 +52,7 @@ public class DummyDataProducer {
                 List<DummyLargeTable> largeTables = getListInstance(range);
                 subscriber.onNext(largeTables);
             }
-            sleep(1000);
+            GenericUtilities.sleep(1000);
         });
     }
     
@@ -59,12 +60,4 @@ public class DummyDataProducer {
         return facade.findRange(range);
     }
     
-
-    private void sleep(int i) {
-        try {
-            Thread.sleep(i);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(DummyDataProducer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 }

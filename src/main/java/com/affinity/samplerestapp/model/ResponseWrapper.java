@@ -5,6 +5,8 @@
  */
 package com.affinity.samplerestapp.model;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -16,16 +18,30 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ResponseWrapper {
     
     private List<DummyLargeTable> valueList;
+    private int size;
 
     public ResponseWrapper() {
+        valueList=Collections.EMPTY_LIST;
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+    
     public List<DummyLargeTable> getValueList() {
         return valueList;
     }
 
     public void setValueList(List<DummyLargeTable> valueList) {
         this.valueList = valueList;
+    }
+
+    public void updateSize() {
+        setSize(valueList.size());
     }
     
     

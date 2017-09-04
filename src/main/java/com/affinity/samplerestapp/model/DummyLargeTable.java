@@ -76,6 +76,10 @@ public class DummyLargeTable implements Serializable{
     public String toString() {
         return "DummyLargeTable{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + '}';
     }
+    
+    public String getJsonRep(){
+        return "{\"id\":"+id+",\"username\":\""+username+"\",\"password\":\""+password+"\",\"email\":\""+email+"\"}";
+    }
 
     @Override
     public int hashCode() {
