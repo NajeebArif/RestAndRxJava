@@ -24,7 +24,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "DUMMY_LARGE_TABLE")
 @NamedQueries({
     @NamedQuery(name = "DummyLargeTable.findAll",query = "SELECT d from DummyLargeTable d"),
-    @NamedQuery(name = "DummyLargeTable.findForUserName",query = "SELECT d FROM DummyLargeTable d where d.username = :username")
+    @NamedQuery(name = "DummyLargeTable.findForUserName",query = "SELECT d FROM DummyLargeTable d where d.username = :username"),
+    @NamedQuery(name = "DummyLargeTable.totalNumberOfRecords", query = "Select count(d) from DummyLargeTable d")
 })
 public class DummyLargeTable implements Serializable{
     

@@ -9,6 +9,7 @@ import com.affinity.samplerestapp.endpoints.AsyncResourceForChunkedResponse;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +45,16 @@ public class GenericUtilities {
         else
             return "Current Time is: "+ZonedDateTime.now();
     }
+    public static String getStringChunk(CountDownLatch cl){
+        
+        String value = "";
+        if(cl.getCount()>0){
+            cl.countDown();
+            return "Current Time is: "+ZonedDateTime.now();
+        }
+        else
+            return null;
+    }
     
     
     public static int[] getRange(int start, int end){
@@ -65,8 +76,8 @@ public class GenericUtilities {
         for(int i = 1; i <= numberOfChunks; i++){
                 int s = CHUNKSIZE*(i-1);
                 int e = CHUNKSIZE*i;
-                System.out.println("FOR ITERATION: #"+i);
-                System.out.println("Start Value is: "+s+" and End Value is: "+e);
+//                System.out.println("FOR ITERATION: #"+i);
+//                System.out.println("Start Value is: "+s+" and End Value is: "+e);
                 rangeList.add(getRange(s, e));
         }
         return rangeList;

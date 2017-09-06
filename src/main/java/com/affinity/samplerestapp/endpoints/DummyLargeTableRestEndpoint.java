@@ -7,7 +7,7 @@ package com.affinity.samplerestapp.endpoints;
 
 import com.affinity.samplerestapp.model.DummyLargeTable;
 import com.affinity.samplerestapp.rxjavasol.DummyDataProducer;
-import com.affinity.samplerestapp.service.DummyLargeTableFacade;
+import com.affinity.samplerestapp.dao.DummyLargeTableFacade;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;

@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.affinity.samplerestapp.service;
+package com.affinity.samplerestapp.dao;
 
 import com.affinity.samplerestapp.model.DummyLargeTable;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -35,6 +36,14 @@ public class DummyLargeTableFacade extends AbstractFacade<DummyLargeTable> {
         q.setParameter("username", username);
         DummyLargeTable value = (DummyLargeTable)q.getSingleResult();
         return value;
+    }
+    
+    public int totalNumberOfRecords(){
+        return em.createNamedQuery("DummyLargeTable.totalNumberOfRecords",Long.class).getSingleResult().intValue();
+    }
+    
+    public List<DummyLargeTable> getRecordsInRange(int startPos, int maxFetchSize){
+        return em.createNamedQuery("DummyLargeTable.findAll").setFirstResult(startPos).setMaxResults(maxFetchSize).getResultList();
     }
     
 }

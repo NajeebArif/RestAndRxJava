@@ -6,11 +6,10 @@
 package com.affinity.samplerestapp.rxjavasol;
 
 import com.affinity.samplerestapp.model.DummyLargeTable;
-import com.affinity.samplerestapp.service.DummyLargeTableFacade;
+import com.affinity.samplerestapp.dao.DummyLargeTableFacade;
 import com.affinity.samplerestapp.utilites.GenericUtilities;
+import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import rx.Observable;
@@ -46,6 +45,7 @@ public class DummyDataProducer {
         });
     }
     
+    
     public Observable<List<DummyLargeTable>> getListObservable(final int[] range){
         return Observable.create((subscriber) -> {
             while(!subscriber.isUnsubscribed()){
@@ -58,6 +58,10 @@ public class DummyDataProducer {
     
     public List<DummyLargeTable> getChunkedData(final int[] range){
         return facade.findRange(range);
+    }
+    
+    public Observable<List<DummyLargeTable>> getObservable(final int[] range){
+        return Observable.just(facade.findRange(range));
     }
     
 }

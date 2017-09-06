@@ -11,6 +11,7 @@ import com.affinity.samplerestapp.rxjavasol.DummyDataProducer;
 import com.affinity.samplerestapp.utilites.GenericUtilities;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -44,8 +45,10 @@ public class AsyncResourceForChunkedResponse {
     private DummyDataProducer producer;
 
     @GET
+    @Path("simple")
     public ChunkedOutput<String> getChunkedStringResponse() {
         final ChunkedOutput<String> output = new ChunkedOutput<String>(String.class);
+        final CountDownLatch cl = new CountDownLatch(5);
         new Thread(() -> {
             String chunk = "";
             try {
@@ -53,6 +56,7 @@ public class AsyncResourceForChunkedResponse {
                 while ((chunk = GenericUtilities.getStringChunk(startTime)) != null) {
                     output.write(chunk);
                     output.write("\n<br />");
+                    cl.countDown();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -194,8 +198,5 @@ public class AsyncResourceForChunkedResponse {
     private void cleanup() {
         LOG.info("com.affinity.samplerestapp.endpoints.AsyncResourceForChunkedResponse class destroyed.");
     }
-    
-    private boolean isCommaUsed(){
-        return false;
-    }
+
 }
