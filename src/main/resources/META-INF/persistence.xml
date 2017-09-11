@@ -5,4 +5,9 @@
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>
+<!--  <persistence-unit name="com.affinity_sampleRestApp_war_1.0-SNAPSHOTPU_12c" transaction-type="JTA">
+    <jta-data-source>jdbc/hrSchema12c</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties/>
+  </persistence-unit>-->
 </persistence>

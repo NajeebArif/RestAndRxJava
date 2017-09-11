@@ -7,6 +7,9 @@ package com.affinity.samplerestapp.endpoints;
 
 import com.affinity.samplerestapp.dao.DummyLargeTableFacade;
 import com.affinity.samplerestapp.model.DummyLargeTable;
+import com.affinity.samplerestapp.qualifiers.Compress;
+import com.affinity.samplerestapp.qualifiers.HrService12c;
+import com.affinity.samplerestapp.service.HrService;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,6 +36,7 @@ import org.glassfish.jersey.server.ChunkedOutput;
  */
 @Path("hugeDataSets")
 @Stateless
+@TransactionAttribute(TransactionAttributeType.NEVER)
 public class SynchronousHugeDataEndpoint {
 
     public SynchronousHugeDataEndpoint() {
@@ -40,9 +44,11 @@ public class SynchronousHugeDataEndpoint {
     
     @EJB private DummyLargeTableFacade facade;
     
+    @EJB @HrService12c
+    private HrService service;
+    
     @GET
     @Path("streamingOutput")
-    @TransactionAttribute(TransactionAttributeType.NEVER)
     public Response getAllTheStreamedResult(){
         StreamingOutput output = new StreamingOutput() {
             @Override
@@ -91,6 +97,9 @@ public class SynchronousHugeDataEndpoint {
                         startIndexOfRecords++;
                     }
                     totalNumberOfRecords-=maxRecordsPerFetch;
+                    System.out.println("Writing a new Line Char to readthe stuffs in chunks.");
+                    
+                    output.write("\n");
                 }
                 output.write("]}");
                 output.close();
@@ -101,6 +110,58 @@ public class SynchronousHugeDataEndpoint {
         
         return output;
     }
+    
+    @GET
+    @Compress
+    @Path("inChunks/compressed")
+    public ChunkedOutput<String> getCompressedChunkedOutput(){
+        return getTheChunkedOutput();
+    }
+    
+    
+    @GET
+    @Path("inChunks/enhancedPagination")
+    public ChunkedOutput<String> getChunkedResponseForEnhancedPag(){
+        final ChunkedOutput<String> output = new ChunkedOutput<>(String.class);
+        
+        new Thread(()->{
+            try {
+                int maxRecordsPerFetch = 10_000;
+                int startIndexOfRecords = 1;
+                int totalNumberOfRecords = 6_000_000;
+                output.write("{\"items\": [");
+                while(totalNumberOfRecords>0){
+                    System.out.println("Starting ID : "+startIndexOfRecords+" goesUpto: "+ (startIndexOfRecords+maxRecordsPerFetch));
+//                    List<DummyLargeTable> records = facade.getRecordsInRange(startIndexOfRecords, maxRecordsPerFetch);
+                    List<DummyLargeTable> records = service.getAllValues(startIndexOfRecords, maxRecordsPerFetch);
+                    System.out.println("Total Number of Records fetched: "+records.size());
+                    for(DummyLargeTable d: records){
+                        if(startIndexOfRecords>1)
+                            output.write(",");
+                        output.write(d.getJsonRep());
+                        startIndexOfRecords++;
+                    }
+                    totalNumberOfRecords-=maxRecordsPerFetch;
+                    
+                    output.write("\n");
+                }
+                output.write("]}");
+                output.close();
+            } catch (IOException ex) {
+                Logger.getLogger(SynchronousHugeDataEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
+        
+        return output;
+    }
+    
+    @GET
+    @Path("inChunks/enhancedPagination/compressed")
+    @Compress
+    public ChunkedOutput<String> getCompressedChunkedResponseForEnhancedPag(){
+        return getChunkedResponseForEnhancedPag();
+    }
+    
     
     protected Response.ResponseBuilder getNoCacheResponseBuilder(Response.Status status){
         CacheControl cc = new CacheControl();

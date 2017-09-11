@@ -46,4 +46,14 @@ public class DummyLargeTableFacade extends AbstractFacade<DummyLargeTable> {
         return em.createNamedQuery("DummyLargeTable.findAll").setFirstResult(startPos).setMaxResults(maxFetchSize).getResultList();
     }
     
+    public List<DummyLargeTable> getResultListForEnhancedPagination(long id,long endId, int noOfRecords){
+        String sql = "Select * from DUMMY_LARGE_TABLE where ID >= ?1 and ID < ?2 fetch first ?3 rows only;";
+        Query q = em.createNativeQuery(sql, DummyLargeTable.class);
+        q.setParameter(1, id);
+        q.setParameter(2, endId);
+        q.setParameter(3, noOfRecords);
+        List<DummyLargeTable> result = q.getResultList();
+        return result;
+    }
+    
 }

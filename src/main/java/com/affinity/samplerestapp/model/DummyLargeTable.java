@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "DummyLargeTable.findAll",query = "SELECT d from DummyLargeTable d"),
     @NamedQuery(name = "DummyLargeTable.findForUserName",query = "SELECT d FROM DummyLargeTable d where d.username = :username"),
-    @NamedQuery(name = "DummyLargeTable.totalNumberOfRecords", query = "Select count(d) from DummyLargeTable d")
+    @NamedQuery(name = "DummyLargeTable.totalNumberOfRecords", query = "Select count(d) from DummyLargeTable d"),
+    @NamedQuery(name = "DummyLargeTable.enhancedPagination", query = "Select d from DummyLargeTable d where d.id > :id order by d.id desc")
 })
 public class DummyLargeTable implements Serializable{
     
